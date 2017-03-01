@@ -7,7 +7,6 @@ class DragDropViewController: UIViewController {
     
     @IBOutlet weak var dragAreaView: UIView!
     @IBOutlet weak var dragView: HeartView!
-    @IBOutlet weak var goalView: UIView!
     
     @IBOutlet weak var dragViewX: NSLayoutConstraint!
     @IBOutlet weak var dragViewY: NSLayoutConstraint!
@@ -15,14 +14,7 @@ class DragDropViewController: UIViewController {
     @IBOutlet var panGesture: UIPanGestureRecognizer!
     
     var initialDragViewY: CGFloat = 0.0
-    var isGoalReached: Bool {
-        get {
-            let distanceFromGoal: CGFloat = sqrt(
-                pow(self.dragView.center.x - self.goalView.center.x, 2) + pow(self.dragView.center.y - self.goalView.center.y, 2)
-            )
-            return distanceFromGoal < self.dragView.bounds.size.width / 2
-        }
-    }
+
     let dragAreaPadding = 5
     var lastBounds = CGRect.zero
     
@@ -40,12 +32,8 @@ class DragDropViewController: UIViewController {
         self.dragView.layer.cornerRadius = self.dragView.bounds.size.height / 2
         self.dragView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.tapAction(_:))))
         
-        self.goalView.layer.cornerRadius = self.goalView.bounds.size.height / 2
-        self.goalView.layer.borderWidth = 2
-        
         self.initialDragViewY = self.dragViewY.constant 
         
-        self.updateGoalView() 
     }
     
     override func viewDidLayoutSubviews() {
@@ -59,8 +47,6 @@ class DragDropViewController: UIViewController {
     
     func boundsChanged() {
         self.returnToStartLocationAnimated(animated: false)
-        
-        self.dragAreaView.bringSubview(toFront: self.goalView)
         self.dragAreaView.bringSubview(toFront: self.dragView)
         self.view.layoutIfNeeded()
         
@@ -141,14 +127,6 @@ class DragDropViewController: UIViewController {
                 self.view.layoutIfNeeded()
             },
             completion: nil)
-        
-        self.updateGoalView() 
-    }
-    
-    func updateGoalView() {
-        let goalColor = self.isGoalReached ? UIColor.white : UIColor.red
-        self.goalView.layer.borderColor = goalColor.cgColor
-        
         
     }
     

@@ -38,6 +38,7 @@ class DragDropViewController: UIViewController {
         self.dragAreaView.layer.borderColor = UIColor.white.cgColor
         
         self.dragView.layer.cornerRadius = self.dragView.bounds.size.height / 2
+        self.dragView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.tapAction(_:))))
         
         self.goalView.layer.cornerRadius = self.goalView.bounds.size.height / 2
         self.goalView.layer.borderWidth = 2
@@ -76,22 +77,16 @@ class DragDropViewController: UIViewController {
             addHeartBeatAnimation(for: self.dragView)
         case .changed:
             self.moveObject()
+        case .ended:
+            self.dragView.layer.removeAllAnimations()
         default:
             break
         }
-        /*
-        if self.panGesture.state == .changed {
-            self.moveObject() 
-        }
-        else if self.panGesture.state == .ended {
-            if self.isGoalReached {
-                addHeartBeatAnimation(for: self.dragView)
-            }
-            else {
-                self.returnToStartLocationAnimated(animated: true)
-            }
-        }
-        */
+        
+    }
+    
+    func tapAction(_ tap: UITapGestureRecognizer) {
+        addHeartBeatAnimation(for: self.dragView)
     }
     
     
